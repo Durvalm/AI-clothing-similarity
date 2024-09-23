@@ -54,25 +54,11 @@ def build_index(image_paths):
 def save_index(index, histograms, filename):
     """Save the FAISS index to a file."""
     faiss.write_index(index, filename)
-    np.save("histograms.npy", histograms)
+    np.save("histograms2.npy", histograms)
 
 def load_index(filename):
     """Load the FAISS index from a file."""
     return faiss.read_index(filename)
-
-# def search_similar_images(img_path, index, image_paths, k=10):
-#     """Search for similar images using the FAISS index."""
-#     segmented_img = segment_image(img_path)
-#     query_features = extract_features(segmented_img)
-#     query_features = np.expand_dims(query_features, axis=0).astype('float32')
-
-#     # Perform search
-#     distances, indices = index.search(query_features, len(image_paths))
-#     print(distances)
-#     matches = [(image_paths[idx], distances[0][i]) for i, idx in enumerate(indices[0]) if distances[0][i] < 10]
-
-#     return matches
-
 
 
 def search_similar_images(img_path, index, image_paths, color_histograms, k=10):
@@ -92,10 +78,12 @@ def search_similar_images(img_path, index, image_paths, color_histograms, k=10):
         candidate_color_hist = color_histograms[idx]
         # Using Bhattacharyya distance
         color_distance = cv2.compareHist(query_color_hist, candidate_color_hist, cv2.HISTCMP_BHATTACHARYYA)
+        resnet_distance = distances[0][i]
+        print(f"Resnet_distance: {resnet_distance}")
         print(f"Color Distance: {color_distance}")
         
         # Lower distance indicates more similarity; define a strict threshold for "very similar" colors
-        if color_distance < 0.5:  # Adjust threshold based on your specific needs and histogram properties
+        if color_distance < 0.16 and resnet_distance < 800:  
             final_matches.append((image_paths[idx], distances[0][i], color_distance))
 
     return final_matches

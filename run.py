@@ -23,7 +23,6 @@ def load_image_paths_from_directory(directory):
 
 
 # Specify the directory containing your dataset images
-# image_directory = 'clothes_dataset'  # Update this path
 image_directory = "/Users/Durval/Developer/AI-image-similarity/clothes_dataset"
 image_paths = load_image_paths_from_directory(image_directory)
 
@@ -37,12 +36,12 @@ else:
 
 # Provide an input image for searching
 # input_image_path = '/Users/Durval/Downloads/img.jpg'  # Path to your input image
-input_image_path = "/Users/Durval/Developer/AI-image-similarity/clothes_dataset/4a56df99-d34f-463c-8c55-7b23dcda50f5.JPG"
+input_image_path = "/Users/Durval/Developer/AI-image-similarity/clothes_dataset/IMG_9827.JPG"
 
 # Search for similar images
 matches = search_similar_images(input_image_path, index, image_paths, color_hist)
 matched_image_paths = [img_path for img_path, *_ in matches]
-print(matched_image_paths)
+
 # Function to display images
 def show_images(image_paths):
     num_images = len(image_paths)
