@@ -54,7 +54,7 @@ def build_index(image_paths):
 def save_index(index, histograms, filename):
     """Save the FAISS index to a file."""
     faiss.write_index(index, filename)
-    np.save("histograms2.npy", histograms)
+    np.save("histograms.npy", histograms)
 
 def load_index(filename):
     """Load the FAISS index from a file."""
@@ -79,11 +79,9 @@ def search_similar_images(img_path, index, image_paths, color_histograms, k=10):
         # Using Bhattacharyya distance
         color_distance = cv2.compareHist(query_color_hist, candidate_color_hist, cv2.HISTCMP_BHATTACHARYYA)
         resnet_distance = distances[0][i]
-        print(f"Resnet_distance: {resnet_distance}")
-        print(f"Color Distance: {color_distance}")
         
         # Lower distance indicates more similarity; define a strict threshold for "very similar" colors
         if color_distance < 0.16 and resnet_distance < 800:  
-            final_matches.append((image_paths[idx], distances[0][i], color_distance))
+            final_matches.append(idx)
 
     return final_matches
